@@ -4,8 +4,6 @@ R pipeline that converts Label Studio JSON exports of annotated terminological v
 
 The annotation itself is done manually in Label Studio; this script only extracts and structures the resulting data from the JSON export files. It was developed for annotations of intratextual terminological variation in research articles in Earth and Planetary Sciences, and can be used for other domains as long as the annotations follow the same scheme (see below).
 
-> Reference: [authors] ([year]). [title of the article]. [proceedings / journal]. [DOI or URL]
-
 ## Requirements
 
 - R
