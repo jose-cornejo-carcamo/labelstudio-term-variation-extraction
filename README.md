@@ -1,4 +1,4 @@
-# labelstudio-term-variation
+# labelstudio-term-variation-extraction
 
 R pipeline that converts Label Studio JSON exports of annotated terminological variation into CSV tables of base term/variant pairs. It rebuilds discontinuous terms, pairs each variant with its base term whatever the direction of the relation, and removes duplicates while keeping occurrence counts.
 
