@@ -60,7 +60,7 @@ In these files, `compound` refers to terms rebuilt from several annotated segmen
 
 ## License
 
-
+CC BY 4.0
 
 ## Contact
 
