@@ -1,8 +1,16 @@
-# labelstudio-term-variation-extraction
+# labelstudio-term-variation
 
 R pipeline that converts Label Studio JSON exports of annotated terminological variation into CSV tables of base term/variant pairs. It rebuilds discontinuous terms, pairs each variant with its base term whatever the direction of the relation, and removes duplicates while keeping occurrence counts.
 
 The annotation itself is done manually in Label Studio; this script only extracts and structures the resulting data from the JSON export files. It was developed for annotations of intratextual terminological variation in research articles in Earth and Planetary Sciences, and can be used for other domains as long as the annotations follow the same scheme (see below).
+
+## Repository contents
+
+| File | Content |
+|---|---|
+| `labeling_interface.xml` | Configuration of the Label Studio labeling interface used for the annotation |
+| `Code_for_Extraction_Adapted.R` | R script that extracts the annotations from the JSON exports |
+| `README.md` | This file |
 
 ## Requirements
 
@@ -12,6 +20,24 @@ The annotation itself is done manually in Label Studio; this script only extract
 ```r
 install.packages(c("jsonlite", "dplyr", "tidyr", "stringr", "purrr"))
 ```
+
+## Labeling interface
+
+`labeling_interface.xml` contains the configuration we used in Label Studio. To reuse it, create a project in Label Studio, open **Settings > Labeling Interface**, switch to the **Code** view and paste the content of the file.
+
+The configuration defines:
+
+- **Two span labels**: `Terme vedette` for base terms and `Variante` for variants.
+- **21 relation labels**, one per sub-type of variation, grouped into five categories:
+  - VG (graphical variation): `MWT abréviation sigle`, `termes formes artificielles`, `changement ortho`, `changement ortho multi`, `abréviation certains constituants`;
+  - VMS (morphosyntactic variation): `changement ordre constituants`, `maintien structure avec/sans article`, `changement flexion`, `changement morpho`, `changement structure`;
+  - VR (reduction): `base`, `extension`, `autres`;
+  - VE (expansion): `trait sémantique`, `substi morph lexem`, `insertion lexicale`, `autres expansions`;
+  - VL (lexical variation): `unité simple`, `changement base`, `changement extension`, `changement base extension`.
+- **Word-level granularity** for text selection (`granularity="word"`), so that annotators cannot select fragments of words.
+- **A sticky label bar** (CSS class `floating-tags`), which stays visible while scrolling through long texts.
+
+The label names are in French and must match the names expected by the R script (see the `[CHANGE IF NEEDED]` comments in the script). If you rename the labels in the interface, rename them in the script as well.
 
 ## Expected annotation scheme
 
@@ -41,7 +67,7 @@ The three CSV files (UTF-8) are written in the same folder as the JSON file, wit
 | `<file>_all_terms_with_counts.csv` | Every annotated term (base terms and variants): `projects`, `tasks`, `final_text`, `final_id`, `label_type`, `is_compound`, `occurrences`. |
 | `<file>_compound_terms_list.csv` | Discontinuous terms rebuilt from `parentID` (same columns as above). Written only if the text contains such terms. |
 
-In these files, `compound` refers to terms rebuilt from several annotated segments (discontinuous terms), not to multiword terms in general.
+In these files, *compound* refers to terms rebuilt from several annotated segments (discontinuous terms), not to multiword terms in general.
 
 ## How it works
 
@@ -55,12 +81,3 @@ In these files, `compound` refers to terms rebuilt from several annotated segmen
 8. **Removing duplicates** and writing the CSV files (`deduplicate_results`, `write_outputs`). Rows with the same base term, variant, variant ID and set of variation labels are kept once, whatever the order of the labels.
 
 `clean_term` also removes a single trailing punctuation mark that may have been included when selecting a term in the interface.
-
-## License
-
-CC BY 4.0
-
-## Contact
-
-José CORNEJO CÁRCAMO
-jose.cornejo.carcamo@gmail.com
